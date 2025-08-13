@@ -1,0 +1,62 @@
+-- Stores
+CREATE TABLE Stores (
+    store_id SERIAL PRIMARY KEY,
+    store_name VARCHAR(100) NOT NULL,
+    location_city VARCHAR(50),
+    location_state VARCHAR(50),
+    opening_date DATE
+);
+
+-- Employees
+CREATE TABLE Employees (
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    role VARCHAR(50),
+    hire_date DATE,
+    store_id INT REFERENCES Stores(store_id)
+);
+
+-- Products
+CREATE TABLE Products (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100),
+    category VARCHAR(50),
+    price_usd DECIMAL(10,2)
+);
+
+-- Suppliers
+CREATE TABLE Suppliers (
+    supplier_id SERIAL PRIMARY KEY,
+    supplier_name VARCHAR(100),
+    contact_number VARCHAR(20),
+    email VARCHAR(100)
+);
+
+-- Inventory
+CREATE TABLE Inventory (
+    inventory_id SERIAL PRIMARY KEY,
+    store_id INT REFERENCES Stores(store_id),
+    product_id INT REFERENCES Products(product_id),
+    quantity INT,
+    last_restock_date DATE,
+    supplier_id INT REFERENCES Suppliers(supplier_id)
+);
+
+-- Sales
+CREATE TABLE Sales (
+    sale_id SERIAL PRIMARY KEY,
+    sale_date DATE,
+    store_id INT REFERENCES Stores(store_id),
+    employee_id INT REFERENCES Employees(employee_id),
+    total_amount DECIMAL(10,2)
+);
+
+-- SaleDetails
+CREATE TABLE SaleDetails (
+    sale_detail_id SERIAL PRIMARY KEY,
+    sale_id INT REFERENCES Sales(sale_id),
+    product_id INT REFERENCES Products(product_id),
+    quantity_sold INT,
+    unit_price DECIMAL(10,2)
+);
