@@ -1,0 +1,17 @@
+CREATE VIEW MonthlySalesSummary AS
+SELECT 
+    store_id,
+    DATE_TRUNC('month', sale_date) AS sale_month,
+    SUM(total_amount) AS monthly_revenue
+FROM Sales
+GROUP BY store_id, sale_month;
+
+CREATE MATERIALIZED VIEW TopSellingProducts AS
+SELECT 
+    p.product_id,
+    p.product_name,
+    SUM(sd.quantity_sold) AS total_units_sold
+FROM SaleDetails sd
+JOIN Products p ON sd.product_id = p.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_units_sold DESC;
